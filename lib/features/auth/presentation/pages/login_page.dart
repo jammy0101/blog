@@ -1,0 +1,100 @@
+import 'package:blog/core/common/widgets/loader.dart';
+import 'package:blog/core/theme/app_pallete.dart';
+import 'package:blog/core/utils/show_snackbar.dart';
+import 'package:blog/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:blog/features/auth/presentation/pages/signup_page.dart';
+import 'package:blog/features/auth/presentation/widgets/auth_field.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../widgets/auth_gradient_button.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+  final formKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: BlocConsumer<AuthBloc, AuthState>(
+  listener: (context, state) {
+    if(state is AuthFailure){
+      showSnackBar(context, state.message);
+    }
+  },
+  builder: (context, state) {
+
+    if(state is AuthLoading){
+      return Loader();
+    }
+    return Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(height: 30),
+              Text(
+                'Sign In.',
+                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 15),
+              AuthField(hintText: 'Email', controller: emailController),
+              SizedBox(height: 15),
+              AuthField(hintText: 'Password', controller: passwordController,obSecureText: true,),
+              SizedBox(height: 15),
+              AuthGradientButton(
+                buttonText: 'Sign In',
+                onPressed: (){
+                  if(formKey.currentState!.validate()){
+                    context.read<AuthBloc>().add(AuthLogin(
+                      email: emailController.text,
+                      password: passwordController.text,
+                    ));
+                  }
+              },),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SignupPage()));
+                },
+                child: RichText(
+                  text: TextSpan(
+                    text: "Don't have an Account? ",
+                    style: Theme.of(context).textTheme.titleMedium,
+                    children: [
+                      TextSpan(
+                        text: "Sign Up",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppPallete.gradient2,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+  },
+),
+      ),
+    );
+  }
+}
