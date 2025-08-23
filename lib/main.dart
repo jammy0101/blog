@@ -9,7 +9,6 @@ import 'init_dependencies.dart';
 // AuthRepository (interface) → the contract your app depends on.
 // AuthRepositoryImpl → converts exceptions to Failure, returns Either.
 // UI → calls repository only, matches on Either to show success/error.
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initDependencies();

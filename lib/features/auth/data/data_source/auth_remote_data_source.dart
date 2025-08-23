@@ -19,7 +19,8 @@ abstract interface class AuthRemoteDataSource {
   });
 }
 
-// An interface defines a contract (what methods must exist) but does not provide the actual implementation.
+// An interface defines a contract (what methods must exist)
+// but does not provide the actual implementation.
 // Classes that implement the interface provide the real logic.
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final SupabaseClient supabaseClient;
@@ -35,9 +36,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         password: password,
         email: email,
       );
+
       if (response.user == null) {
         throw ServerException('User is null!');
       }
+
       return UserModel.fromJson(response.user!.toJson());
     } catch (e) {
       throw ServerException(e.toString());

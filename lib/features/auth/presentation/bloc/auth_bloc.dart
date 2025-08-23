@@ -13,11 +13,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserLogin _userLogin;
 
 
-  AuthBloc({
-    required UserSignUp userSignUp,
-    required UserLogin userLogin
-  }) : _userSignUp = userSignUp,
-      _userLogin = userLogin,
+  AuthBloc({required UserSignUp userSignUp, required UserLogin userLogin,})
+      : _userSignUp = userSignUp,
+        _userLogin = userLogin,
       super(AuthInitial()) {
     on<AuthSignUp>(_onAuthSignUp);
     on<AuthLogin>(_onAuthLogin);
