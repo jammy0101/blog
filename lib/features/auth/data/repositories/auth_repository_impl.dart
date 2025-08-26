@@ -4,19 +4,34 @@
 // Handles exceptions.
 // Returns clean result (Either<Failure, Success>).
 //this is the actual implementation
+import 'package:blog/core/entities/user.dart';
 import 'package:blog/core/error/exceptions.dart';
 import 'package:blog/core/error/failures.dart';
 import 'package:blog/features/auth/data/data_source/auth_remote_data_source.dart';
-import 'package:blog/features/auth/domain/entities/user.dart';
 import 'package:blog/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
-
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
+
 // An interface defines a contract (what methods must exist) but does not provide the actual implementation.
 // Classes that implement the interface provide the real logic.
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   AuthRepositoryImpl(this.remoteDataSource);
+
+  @override
+  Future<Either<Failure, User>> currentUser() async {
+    try {
+      final user = await remoteDataSource.getCurrentUserData();
+      if (user == null) {
+        return left(Failure('User not logged in'));
+      }
+      return right(user);
+    } on sb.AuthException catch (e) {
+      return left(Failure(e.message));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, User>> loginWithEmailPassword({
@@ -51,7 +66,7 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await fn();
 
       return right(user);
-    } on sb.AuthException catch(e){
+    } on sb.AuthException catch (e) {
       return left(Failure(e.message));
     } on ServerException catch (e) {
       return left(Failure(e.message));
