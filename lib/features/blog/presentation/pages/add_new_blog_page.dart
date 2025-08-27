@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:ui' as BorderType;
 
 import 'package:blog/core/theme/app_pallete.dart';
+import 'package:blog/core/utils/pick_image.dart';
 import 'package:blog/features/blog/presentation/widgets/blog_editor.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -16,6 +18,17 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
   final titleController = TextEditingController();
   final contentController = TextEditingController();
   List<String> selectedTopic = [];
+  File? image;
+
+  void selectImage()async{
+    final pickedImage = await pickImage();
+    if(pickedImage != null){
+      setState(() {
+        image = pickedImage;
+      });
+    }
+  }
+
   @override
   void dispose() {
     titleController.dispose();
@@ -34,30 +47,45 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              DottedBorder(
-                options: RectDottedBorderOptions(
-                  dashPattern: [10, 4],
-                  strokeWidth: 1,
-                  strokeCap: StrokeCap.round,
-                  borderPadding: EdgeInsets.symmetric(),
-                  color: AppPallete.gradient3,
-                  padding: EdgeInsets.all(16),
-                  gradient: LinearGradient(
-                    colors: [AppPallete.gradient1, AppPallete.gradient2],
-                    begin: Alignment.bottomLeft,
-                    end: Alignment.center,
+              image != null ?
+                  GestureDetector(
+                    onTap: selectImage,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                            child: Image.file(image!,fit: BoxFit.cover,))),
+                  )
+             : GestureDetector(
+                onTap: (){
+                  selectImage();
+                },
+                child: DottedBorder(
+                  options: RectDottedBorderOptions(
+                    dashPattern: [10, 4],
+                    strokeWidth: 1,
+                    strokeCap: StrokeCap.round,
+                    borderPadding: EdgeInsets.symmetric(),
+                    color: AppPallete.gradient3,
+                    padding: EdgeInsets.all(16),
+                    gradient: LinearGradient(
+                      colors: [AppPallete.gradient1, AppPallete.gradient2],
+                      begin: Alignment.bottomLeft,
+                      end: Alignment.center,
+                    ),
                   ),
-                ),
-                child: Container(
-                  height: 150,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.folder_open, size: 40),
-                      SizedBox(height: 15),
-                      Text('Select your Image', style: TextStyle(fontSize: 15)),
-                    ],
+                  child: Container(
+                    height: 150,
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.folder_open, size: 40),
+                        SizedBox(height: 15),
+                        Text('Select your Image', style: TextStyle(fontSize: 15)),
+                      ],
+                    ),
                   ),
                 ),
               ),

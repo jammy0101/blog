@@ -1,10 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:blog/core/error/failures.dart';
 import 'package:blog/core/usecase/usecase.dart';
 import 'package:blog/features/auth/domain/usecases/current_user.dart';
 import 'package:blog/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:meta/meta.dart';
-
 import '../../../../core/common/cubit/app_user/auth_user_cubit.dart';
 import '../../../../core/entities/user.dart';
 import '../../domain/usecases/user_login.dart';
@@ -82,8 +80,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (user) => _emitAuthSuccess(user,emit),
     );
   }
-
-
-
 
 }
