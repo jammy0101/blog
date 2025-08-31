@@ -8,6 +8,7 @@ Future<File?> pickImage()async{
 
     final xFile = await ImagePicker().pickImage(
         source: ImageSource.gallery,
+      imageQuality: 50,
     );
 
     if(xFile != null){

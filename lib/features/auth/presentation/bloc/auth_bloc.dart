@@ -33,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //for sign UP
   void _onAuthSignUp(AuthSignUp event, Emitter<AuthState> emit) async {
+    //here i will use the usecase
     final res = await _userSignUp(
       UserSignUpParams(
         email: event.email,
@@ -49,6 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   //for Current User that is Login or Not
   void _isUserLoggedIn(AuthIsUserLoggedIn event, Emitter<AuthState> emit,) async {
+    //here i will use the usecase
     final res = await _currentUser(NoParams());
 
     res.fold(
@@ -68,6 +70,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
 // for Login purpose
   void _onAuthLogin(AuthLogin event, Emitter<AuthState> emit) async {
+    //here i will use the usecase
     final res = await _userLogin(
       UserLoginParams(
           email: event.email,

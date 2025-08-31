@@ -4,6 +4,7 @@ import 'package:blog/core/utils/show_snackbar.dart';
 import 'package:blog/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog/features/auth/presentation/pages/login_page.dart';
 import 'package:blog/features/auth/presentation/widgets/auth_field.dart';
+import 'package:blog/features/blog/presentation/pages/blog_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,6 +43,8 @@ class _SignupPageState extends State<SignupPage> {
   listener: (context, state) {
     if(state is AuthFailure){
       showSnackBar(context, state.message);
+    }else if(state is AuthSuccess){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => BlogPage()));
     }
   },
   builder: (context, state) {

@@ -1,5 +1,6 @@
 import 'package:blog/core/error/exceptions.dart';
 import 'package:blog/features/auth/data/models/user_model.dart';
+import 'package:blog/features/blog/data/model/blog_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 // AuthRemoteDataSource (data source)
@@ -9,7 +10,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract interface class AuthRemoteDataSource {
 
   Session? get currentUserSession;
-
 
   Future<UserModel?> getCurrentUserData();
 
@@ -23,6 +23,8 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
+
+
 
 }
 
@@ -100,6 +102,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.toString());
     }
   }
+
 
 
 }
