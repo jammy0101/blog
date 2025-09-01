@@ -8,7 +8,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 // Responsible only for making API calls.
 // Example: supabase.auth.signUp(...).
 abstract interface class AuthRemoteDataSource {
-
   Session? get currentUserSession;
 
   Future<UserModel?> getCurrentUserData();
@@ -23,9 +22,6 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
   });
-
-
-
 }
 
 // An interface defines a contract (what methods must exist)
@@ -38,18 +34,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Session? get currentUserSession => supabaseClient.auth.currentSession;
 
-
-
   // Its is for the current session
   @override
   Future<UserModel?> getCurrentUserData() async {
     try {
-      if(currentUserSession != null){
+      if (currentUserSession != null) {
         final userData = await supabaseClient
             .from('profiles')
             .select()
-            .eq('id', currentUserSession!.user.id
-        );
+            .eq('id', currentUserSession!.user.id);
         return UserModel.fromJson(userData.first);
       }
       return null;
@@ -95,14 +88,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.user == null) {
         throw ServerException('User is null');
       }
-      return UserModel.fromJson(response.user!.toJson()).copyWith(
-        email: currentUserSession!.user.email,
-      );
+      return UserModel.fromJson(
+        response.user!.toJson(),
+      ).copyWith(email: currentUserSession!.user.email);
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
-
-
-
 }
