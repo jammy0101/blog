@@ -36,6 +36,8 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
        //by poster we will show and fetch this
        posterName: blog['profiles']['name'],
      )).toList();
+    }on StorageException catch(e){
+      throw ServerException(e.toString());
     }catch(e){
       throw ServerException(e.toString());
     }

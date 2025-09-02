@@ -14,4 +14,5 @@ class AuthUserCubit extends Cubit<AuthUserState> {
       emit(AuthUserLoggedIn(user));
     }
   }
+  void logout() => emit(AuthUserInitial());
 }

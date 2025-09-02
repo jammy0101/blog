@@ -44,7 +44,7 @@ class _SignupPageState extends State<SignupPage> {
     if(state is AuthFailure){
       showSnackBar(context, state.message);
     }else if(state is AuthSuccess){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => BlogPage()));
+      Navigator.pushAndRemoveUntil(context, BlogPage.route(), (route) => false);
     }
   },
   builder: (context, state) {

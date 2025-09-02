@@ -11,18 +11,19 @@ abstract interface class AuthRemoteDataSource {
   Session? get currentUserSession;
 
   Future<UserModel?> getCurrentUserData();
-
   Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
     required String password,
   });
-
   Future<UserModel> loginWithEmailPassword({
     required String email,
     required String password,
   });
+  Future<void> logout();
 }
+
+
 
 // An interface defines a contract (what methods must exist)
 // but does not provide the actual implementation.
@@ -92,6 +93,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         response.user!.toJson(),
       ).copyWith(email: currentUserSession!.user.email);
     } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> logout()async{
+    try{
+      await supabaseClient.auth.signOut();
+    }catch(e){
       throw ServerException(e.toString());
     }
   }

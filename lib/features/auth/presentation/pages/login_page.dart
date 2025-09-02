@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     if(state is AuthFailure){
       showSnackBar(context, state.message);
     }else if(state is AuthSuccess){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => BlogPage()));
+      Navigator.pushAndRemoveUntil(context, BlogPage.route(), (route) => false);
     }
   },
   builder: (context, state) {

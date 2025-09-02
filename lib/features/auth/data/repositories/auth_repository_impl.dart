@@ -13,6 +13,7 @@ import 'package:blog/features/auth/data/models/user_model.dart';
 import 'package:blog/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
+import '../../../../core/constants/constants.dart';
 
 // An interface defines a contract (what methods must exist) but does not provide the actual implementation.
 // Classes that implement the interface provide the real logic.
@@ -32,7 +33,11 @@ class AuthRepositoryImpl implements AuthRepository {
         }
 
         return right(
-          UserModel(id: session.user.id, email: session.user.email ?? '', name: ''),
+          UserModel(
+            id: session.user.id,
+            email: session.user.email ?? '',
+            name: '',
+          ),
         );
       }
       final user = await remoteDataSource.getCurrentUserData();
@@ -78,13 +83,23 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> _getUser(Future<User> Function() fn) async {
     try {
       if (!await (connectionChecker.isConnected)) {
-        return left(Failure('No Internet Connection'));
+        return left(Failure(Constants.noConnectionErrorMessage));
       }
       final user = await fn();
 
       return right(user);
     } on sb.AuthException catch (e) {
       return left(Failure(e.message));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      await remoteDataSource.logout();
+      return right(null);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
